@@ -37,15 +37,15 @@ class I18nManager {
         
         // Страница "О сайте"
         'about_title': 'About Demon List',
-        'about_content': 'This is a community-maintained demon list for Geometry Dash levels. The list ranks the most difficult user-created levels in the game.',
+        'about_content': 'This is a list of daemons for Geometry Dash levels maintained by weirdo. The list ranks the most difficult user-created levels in the gdps.',
         'rules_title': 'Rules for Level Inclusion',
-        'rule_1': 'Level must be rated Extreme Demon',
-        'rule_2': 'Level must have a verification video',
-        'rule_3': 'Level must be harder than #25 on the list',
+        'rule_1': 'Level must be rated',
+        'rule_2': 'Level must have a verification video (optional)',
+        'rule_3': 'Level must be (idk)',
         'points_system_title': 'Points System',
         'points_system_description': 'Points are calculated based on level position. Higher positions give more points.',
         'contact_title': 'Contact',
-        'contact_email': 'Email: contact@demondlist.com',
+        'contact_email': 'Discord: .itzbit',
         
         // Детальные страницы
         'back_to_levels': '← Back to Levels',
@@ -98,15 +98,15 @@ class I18nManager {
         
         // Страница "О сайте"
         'about_title': 'О Демон Листе',
-        'about_content': 'Это демон-лист для уровней Geometry Dash, поддерживаемый сообществом. Список ранжирует самые сложные пользовательские уровни в игре.',
+        'about_content': 'Это демон-лист для уровней Geometry Dash, поддерживаемый чудаком. Список ранжирует самые сложные пользовательские уровни на гдпс.',
         'rules_title': 'Правила включения уровня',
-        'rule_1': 'Уровень должен иметь рейтинг Extreme Demon',
-        'rule_2': 'Уровень должен иметь видео верификации',
-        'rule_3': 'Уровень должен быть сложнее #25 в списке',
+        'rule_1': 'Уровень должен иметь рейт',
+        'rule_2': 'Уровень должен иметь видео верификации (выборочно)',
+        'rule_3': 'Уровень должен быть (по желанию)',
         'points_system_title': 'Система Очков',
         'points_system_description': 'Очки рассчитываются на основе позиции уровня. Более высокие позиции дают больше очков.',
         'contact_title': 'Контакты',
-        'contact_email': 'Email: contact@demondlist.com',
+        'contact_email': 'Discord: .itzbit',
         
         // Детальные страницы
         'back_to_levels': '← Назад к уровням',

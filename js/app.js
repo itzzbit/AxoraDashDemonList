@@ -43,12 +43,10 @@ class DemonListApp {
             console.log('✅ App initialized successfully');
             console.log(`📊 Levels: ${this.levels.length}`);
             console.log(`👥 Players: ${this.players.length}`);
-            console.log('Processed levels:', this.levels);
-            console.log('Processed players:', this.players);
             
         } catch (error) {
             console.error('❌ App initialization failed:', error);
-            Utils.showError(`Failed to initialize app: ${error.message}`);
+            Utils.showError(this.i18n.t('error_loading') || 'Error loading data. Please try again.');
         } finally {
             this.isLoading = false;
         }
@@ -75,7 +73,7 @@ class DemonListApp {
             this.levels = storedLevels;
             this.players = storedPlayers;
             
-            // ОБНОВЛЕНО: Обрабатываем данные из localStorage
+            // Обрабатываем данные из localStorage
             this.processLevels();
             this.processPlayers();
         } else {
@@ -112,7 +110,7 @@ class DemonListApp {
     processPlayers() {
         console.log('🔄 Processing players...');
         
-        // ОБНОВЛЕНО: Пересчитываем очки для всех игроков
+        // Пересчитываем очки для всех игроков
         this.players.forEach(player => {
             player.points = PointsSystem.calculatePlayerPoints(player, this.levels);
         });
@@ -120,7 +118,7 @@ class DemonListApp {
         // Сортируем игроков по очкам (по убыванию)
         this.players.sort((a, b) => b.points - a.points);
         
-        // ОБНОВЛЕНО: Устанавливаем ранги и количество уровней
+        // Устанавливаем ранги и количество уровней
         this.players.forEach((player, index) => {
             player.rank = index + 1;
             player.levelsCount = player.levels ? player.levels.length : 0;
@@ -135,11 +133,12 @@ class DemonListApp {
         const settings = this.storage.loadSettings();
         const language = settings.language || 'en';
         this.i18n.setLanguage(language);
+        this.i18n.loadLanguage();
         
         // Устанавливаем значение в селекторе языка
         const selector = document.getElementById('language-selector');
         if (selector) {
-            selector.value = language;
+            selector.value = this.i18n.getLanguage();
         }
     }
     
@@ -329,36 +328,32 @@ class DemonListApp {
         app.innerHTML = `
             <div class="container">
                 <div class="welcome-section">
-                    <h1 class="welcome-title">Geometry Dash Demon List</h1>
-                    <p class="welcome-text">${this.i18n.t('welcome_text') || 'Community-maintained ranking of the hardest Geometry Dash levels'}</p>
+                    <h1 class="welcome-title" data-i18n="welcome_title">Geometry Dash Demon List</h1>
+                    <p class="welcome-text" data-i18n="welcome_text">Community-maintained ranking of the hardest Geometry Dash levels</p>
                 </div>
                 
                 <section>
-                    <h2 class="section-title">${this.i18n.t('top_levels') || 'Top Levels'}</h2>
+                    <h2 class="section-title" data-i18n="top_levels">Top Levels</h2>
                     <div class="levels-grid">
                         ${this.renderTopLevels(6)}
                     </div>
                     <div class="view-all">
-                        <a href="#levels" class="nav-link view-all-link" data-page="levels">
-                            ${this.i18n.t('view_all_levels') || 'View All Levels'} →
-                        </a>
+                        <a href="#levels" class="nav-link view-all-link" data-page="levels" data-i18n="view_all_levels">View All Levels →</a>
                     </div>
                 </section>
                 
                 <section>
-                    <h2 class="section-title">${this.i18n.t('top_players') || 'Top Players'}</h2>
+                    <h2 class="section-title" data-i18n="top_players">Top Players</h2>
                     <div class="players-grid">
                         ${this.renderTopPlayers(6)}
                     </div>
                     <div class="view-all">
-                        <a href="#players" class="nav-link view-all-link" data-page="players">
-                            ${this.i18n.t('view_all_players') || 'View All Players'} →
-                        </a>
+                        <a href="#players" class="nav-link view-all-link" data-page="players" data-i18n="view_all_players">View All Players →</a>
                     </div>
                 </section>
                 
                 <section class="stats-section">
-                    <h2 class="section-title">${this.i18n.t('statistics') || 'Statistics'}</h2>
+                    <h2 class="section-title" data-i18n="statistics">Statistics</h2>
                     ${this.renderStats()}
                 </section>
             </div>
@@ -388,29 +383,31 @@ class DemonListApp {
         
         // Получаем опции сортировки
         const sortOptions = [
-            { value: 'position', label: this.i18n.t('sort_position') || 'Position' },
-            { value: 'name', label: this.i18n.t('sort_name') || 'Name' },
-            { value: 'creator', label: this.i18n.t('sort_creator') || 'Creator' },
-            { value: 'points', label: this.i18n.t('sort_points') || 'Points' }
+            { value: 'position', label: 'sort_position' },
+            { value: 'name', label: 'sort_name' },
+            { value: 'creator', label: 'sort_creator' },
+            { value: 'points', label: 'sort_points' }
         ];
         
         const sortOptionsHtml = sortOptions.map(option => `
-            <option value="${option.value}">${option.label}</option>
+            <option value="${option.value}" data-i18n="${option.label}">${this.i18n.t(option.label) || option.label}</option>
         `).join('');
         
         app.innerHTML = `
             <div class="container">
-                <h2 class="section-title">${this.i18n.t('levels') || 'Levels'}</h2>
+                <h2 class="section-title" data-i18n="levels_title">Demon Levels</h2>
                 
                 <div class="controls">
                     <div class="search-container">
+                        <i class='bx bx-search search-icon'></i>
                         <input type="text" 
                                class="search-input" 
+                               data-i18n-placeholder="search_levels" 
                                placeholder="${this.i18n.t('search_levels') || 'Search levels...'}" 
                                value="${this.currentSearchQuery}">
                     </div>
                     <select class="sort-select">
-                        <option value="">${this.i18n.t('sort_by') || 'Sort by'}</option>
+                        <option value="" data-i18n="sort_by">${this.i18n.t('sort_by') || 'Sort by'}</option>
                         ${sortOptionsHtml}
                     </select>
                 </div>
@@ -418,12 +415,12 @@ class DemonListApp {
                 <div class="levels-grid">
                     ${filteredLevels.length > 0 ? 
                         filteredLevels.map(level => this.renderLevelCard(level)).join('') : 
-                        `<div class="no-results">${this.i18n.t('no_levels_found') || 'No levels found'}</div>`
+                        `<p class="no-results" data-i18n="no_levels_found">${this.i18n.t('no_levels_found') || 'No levels found matching your search.'}</p>`
                     }
                 </div>
                 
                 <div class="view-all">
-                    <a href="#home" class="nav-link" data-page="home">
+                    <a href="#home" class="nav-link" data-page="home" data-i18n="back_to_home">
                         ← ${this.i18n.t('back_to_home') || 'Back to Home'}
                     </a>
                 </div>
@@ -458,28 +455,30 @@ class DemonListApp {
         
         // Получаем опции сортировки
         const sortOptions = [
-            { value: 'rank', label: this.i18n.t('sort_rank') || 'Rank' },
-            { value: 'name', label: this.i18n.t('sort_name') || 'Name' },
-            { value: 'points', label: this.i18n.t('sort_points') || 'Points' }
+            { value: 'rank', label: 'sort_rank' },
+            { value: 'name', label: 'sort_name' },
+            { value: 'points', label: 'sort_points' }
         ];
         
         const sortOptionsHtml = sortOptions.map(option => `
-            <option value="${option.value}">${option.label}</option>
+            <option value="${option.value}" data-i18n="${option.label}">${this.i18n.t(option.label) || option.label}</option>
         `).join('');
         
         app.innerHTML = `
             <div class="container">
-                <h2 class="section-title">${this.i18n.t('players') || 'Players'}</h2>
+                <h2 class="section-title" data-i18n="players_title">Top Players</h2>
                 
                 <div class="controls">
                     <div class="search-container">
+                        <i class='bx bx-search search-icon'></i>
                         <input type="text" 
                                class="search-input" 
+                               data-i18n-placeholder="search_players" 
                                placeholder="${this.i18n.t('search_players') || 'Search players...'}" 
                                value="${this.currentSearchQuery}">
                     </div>
                     <select class="sort-select">
-                        <option value="">${this.i18n.t('sort_by') || 'Sort by'}</option>
+                        <option value="" data-i18n="sort_by">${this.i18n.t('sort_by') || 'Sort by'}</option>
                         ${sortOptionsHtml}
                     </select>
                 </div>
@@ -487,12 +486,12 @@ class DemonListApp {
                 <div class="players-grid">
                     ${filteredPlayers.length > 0 ? 
                         filteredPlayers.map(player => this.renderPlayerCard(player)).join('') : 
-                        `<div class="no-results">${this.i18n.t('no_players_found') || 'No players found'}</div>`
+                        `<p class="no-results" data-i18n="no_players_found">${this.i18n.t('no_players_found') || 'No players found matching your search.'}</p>`
                     }
                 </div>
                 
                 <div class="view-all">
-                    <a href="#home" class="nav-link" data-page="home">
+                    <a href="#home" class="nav-link" data-page="home" data-i18n="back_to_home">
                         ← ${this.i18n.t('back_to_home') || 'Back to Home'}
                     </a>
                 </div>
@@ -511,14 +510,14 @@ class DemonListApp {
         
         app.innerHTML = `
             <div class="container">
-                <h2 class="section-title">${this.i18n.t('about') || 'About'}</h2>
+                <h2 class="section-title" data-i18n="about_title">About Demon List</h2>
                 
                 <div class="detail-container">
-                    <h3>${this.i18n.t('about_project') || 'About the Project'}</h3>
-                    <p>${this.i18n.t('about_description') || 'This is a community-maintained demon list for Geometry Dash levels.'}</p>
+                    <h3 data-i18n="about_project">About the Project</h3>
+                    <p data-i18n="about_description">This is a community-maintained demon list for Geometry Dash levels.</p>
                     
-                    <h3>${this.i18n.t('points_system') || 'Points System'}</h3>
-                    <p>${this.i18n.t('points_description') || 'Points are calculated using a formula that considers level position and total number of levels.'}</p>
+                    <h3 data-i18n="points_system">Points System</h3>
+                    <p data-i18n="points_description">Points are calculated using a formula that considers level position and total number of levels.</p>
                     <ul>
                         <li>Formula: 1000 - (1000 - 1) * ((position-1)/(totalLevels-1))^0.66</li>
                         <li>First place: 1000 points</li>
@@ -526,17 +525,17 @@ class DemonListApp {
                         <li>Player points = sum of points from completed levels</li>
                     </ul>
                     
-                    <h3>${this.i18n.t('rules') || 'Rules'}</h3>
+                    <h3 data-i18n="rules">Rules</h3>
                     <ul>
-                        <li>${this.i18n.t('rule_verification') || 'Levels must be verified with video proof'}</li>
-                        <li>${this.i18n.t('rule_demon') || 'Only Extreme Demon levels are listed'}</li>
-                        <li>${this.i18n.t('rule_fairplay') || 'No hacked or modified game versions allowed'}</li>
+                        <li data-i18n="rule_verification">Levels must be verified with video proof</li>
+                        <li data-i18n="rule_demon">Only Extreme Demon levels are listed</li>
+                        <li data-i18n="rule_fairplay">No hacked or modified game versions allowed</li>
                     </ul>
                     
-                    <h3>${this.i18n.t('contact') || 'Contact'}</h3>
-                    <p>${this.i18n.t('contact_info') || 'For questions or suggestions, please contact the administrator.'}</p>
+                    <h3 data-i18n="contact">Contact</h3>
+                    <p data-i18n="contact_info">For questions or suggestions, please contact the administrator.</p>
                     
-                    <h3>${this.i18n.t('version') || 'Version'}</h3>
+                    <h3 data-i18n="version">Version</h3>
                     <p>Demon List v2.0</p>
                 </div>
             </div>
@@ -558,55 +557,43 @@ class DemonListApp {
         
         app.innerHTML = `
             <div class="container fade-in">
-                <button class="back-button" data-page="levels">
-                    ← ${this.i18n.t('back_to_levels') || 'Back to Levels'}
-                </button>
+                <button class="back-button" data-page="levels" data-i18n="back_to_levels">← Back to Levels</button>
                 
                 <div class="detail-container">
                     <div class="detail-header">
-                        <h1 class="detail-title">${level.name}</h1>
-                        <div class="detail-subtitle">${this.i18n.t('by_creator') || 'by'} ${level.creator}</div>
-                        <div class="level-position">${this.i18n.t('position') || 'Position'}: #${level.position}</div>
-                        <div class="level-points">${level.points} ${this.i18n.t('points') || 'points'}</div>
+                        <h1 class="detail-title">#${level.position || 0} - ${level.name}</h1>
+                        <div class="detail-subtitle">
+                            <span data-i18n="creator">Creator</span>: ${level.creator} | 
+                            <span data-i18n="verifier">Verifier</span>: ${level.verifier}
+                        </div>
+                        <div class="level-points">${level.points || 0} <span data-i18n="points">points</span></div>
                     </div>
                     
                     <div class="detail-stats">
                         <div class="detail-stat">
                             <div class="detail-stat-value">${level.verifier}</div>
-                            <div class="detail-stat-label">${this.i18n.t('verifier') || 'Verifier'}</div>
+                            <div class="detail-stat-label" data-i18n="verifier">Verifier</div>
                         </div>
                         <div class="detail-stat">
                             <div class="detail-stat-value">${victors.length}</div>
-                            <div class="detail-stat-label">${this.i18n.t('victors') || 'Victors'}</div>
+                            <div class="detail-stat-label" data-i18n="victors">Victors</div>
                         </div>
                     </div>
                     
                     ${level.videoURL ? `
                         <div class="detail-content">
-                            <h3>${this.i18n.t('video_proof') || 'Video Proof'}</h3>
-                            <a href="${level.videoURL}" target="_blank" class="video-link">
-                                ${this.i18n.t('watch_verification') || 'Watch verification video'} →
-                            </a>
+                            <h3 data-i18n="video">Video</h3>
+                            <a href="${level.videoURL}" target="_blank" class="video-link" data-i18n="watch_video">Watch Verification Video</a>
                         </div>
                     ` : ''}
                     
-                    ${victors.length > 0 ? `
-                        <div class="detail-content">
-                            <h3>${this.i18n.t('players_completed') || 'Players who completed this level'}</h3>
-                            <div class="victors-list">
-                                ${victors.map(player => `
-                                    <span class="victor" onclick="app.navigateTo('player/${this.players.find(p => p.name === player)?.id}')">
-                                        ${player}
-                                    </span>
-                                `).join(', ')}
-                            </div>
-                        </div>
-                    ` : `
-                        <div class="detail-content">
-                            <h3>${this.i18n.t('no_victors') || 'No victors yet'}</h3>
-                            <p>${this.i18n.t('be_first') || 'Be the first to complete this level!'}</p>
-                        </div>
-                    `}
+                    <div class="detail-content">
+                        <h3 data-i18n="victors">Players who completed this level</h3>
+                        ${victors.length > 0 ? 
+                            victors.map(victor => `<p>${victor}</p>`).join('') : 
+                            `<p data-i18n="no_victors">No players have completed this level yet.</p>`
+                        }
+                    </div>
                 </div>
             </div>
         `;
@@ -627,30 +614,27 @@ class DemonListApp {
         
         app.innerHTML = `
             <div class="container fade-in">
-                <button class="back-button" data-page="players">
-                    ← ${this.i18n.t('back_to_players') || 'Back to Players'}
-                </button>
+                <button class="back-button" data-page="players" data-i18n="back_to_players">← Back to Players</button>
                 
                 <div class="detail-container">
                     <div class="detail-header">
-                        <h1 class="detail-title">${player.name}</h1>
-                        <div class="player-rank">${this.i18n.t('rank') || 'Rank'}: #${player.rank || 0}</div>
-                        <div class="player-points">${player.points || 0} ${this.i18n.t('points') || 'points'}</div>
+                        <h1 class="detail-title">#${player.rank || 0} - ${player.name}</h1>
+                        <div class="player-points">${player.points || 0} <span data-i18n="points">points</span></div>
                     </div>
                     
                     <div class="detail-stats">
                         <div class="detail-stat">
                             <div class="detail-stat-value">${playerLevels.length}</div>
-                            <div class="detail-stat-label">${this.i18n.t('levels_completed') || 'Levels Completed'}</div>
+                            <div class="detail-stat-label" data-i18n="levels_completed">Levels Completed</div>
                         </div>
                         <div class="detail-stat">
                             <div class="detail-stat-value">${playerLevels.length > 0 ? Math.round(player.points / playerLevels.length) : 0}</div>
-                            <div class="detail-stat-label">${this.i18n.t('average_points') || 'Average Points'}</div>
+                            <div class="detail-stat-label" data-i18n="average_points">Average Points</div>
                         </div>
                     </div>
                     
                     <div class="detail-content">
-                        <h3>${this.i18n.t('completed_levels') || 'Completed Levels'}</h3>
+                        <h3 data-i18n="completed_levels">Completed Levels</h3>
                         
                         ${playerLevels.length > 0 ? `
                             <div class="levels-grid mini-grid">
@@ -658,13 +642,13 @@ class DemonListApp {
                                     <div class="level-card mini-card" data-level-id="${level.id}">
                                         <div class="level-position">#${level.position}</div>
                                         <div class="level-name">${level.name}</div>
-                                        <div class="level-creator">by ${level.creator}</div>
+                                        <div class="level-creator">${this.i18n.t('by') || 'by'} ${level.creator}</div>
                                         <div class="level-points">${level.points} ${this.i18n.t('points') || 'points'}</div>
                                     </div>
                                 `).join('')}
                             </div>
                         ` : `
-                            <p class="no-levels">${this.i18n.t('no_levels_completed') || 'No levels completed yet'}</p>
+                            <p class="no-levels" data-i18n="no_levels_completed">No levels completed yet</p>
                         `}
                     </div>
                 </div>
@@ -684,15 +668,14 @@ class DemonListApp {
                  aria-label="${this.i18n.t('level_card') || 'Level card'}: ${level.name}">
                 <div class="level-position">#${position}</div>
                 <div class="level-name">${level.name}</div>
-                <div class="level-creator">${this.i18n.t('by') || 'by'} ${level.creator}</div>
-                <div class="level-verifier">${this.i18n.t('verified_by') || 'Verified by'} ${level.verifier}</div>
-                <div class="level-points">${points} ${this.i18n.t('points') || 'points'}</div>
+                <div class="level-creator" data-i18n="creator">Creator: ${level.creator}</div>
+                <div class="level-verifier" data-i18n="verifier">Verifier: ${level.verifier}</div>
+                <div class="level-points">${points} <span data-i18n="points">points</span></div>
             </div>
         `;
     }
     
     renderPlayerCard(player) {
-        // ОБНОВЛЕНО: Используем свойства из processPlayers()
         const rank = player.rank || 0;
         const points = player.points || 0;
         const levelsCount = player.levelsCount || (player.levels ? player.levels.length : 0);
@@ -703,15 +686,15 @@ class DemonListApp {
                  aria-label="${this.i18n.t('player_card') || 'Player card'}: ${player.name}">
                 <div class="player-rank">#${rank}</div>
                 <div class="player-name">${player.name}</div>
-                <div class="player-points">${points} ${this.i18n.t('points') || 'points'}</div>
-                <div class="player-levels-count">${levelsCount} ${this.i18n.t('levels') || 'levels'}</div>
+                <div class="player-points">${points} <span data-i18n="points">points</span></div>
+                <div class="player-levels-count" data-i18n="levels_completed">Levels completed: ${levelsCount}</div>
             </div>
         `;
     }
     
     renderTopLevels(limit) {
         if (!this.levels || this.levels.length === 0) {
-            return `<div class="no-results">${this.i18n.t('no_levels') || 'No levels available'}</div>`;
+            return `<div class="no-results" data-i18n="no_levels">${this.i18n.t('no_levels') || 'No levels available'}</div>`;
         }
         
         const topLevels = [...this.levels]
@@ -723,7 +706,7 @@ class DemonListApp {
     
     renderTopPlayers(limit) {
         if (!this.players || this.players.length === 0) {
-            return `<div class="no-results">${this.i18n.t('no_players') || 'No players available'}</div>`;
+            return `<div class="no-results" data-i18n="no_players">${this.i18n.t('no_players') || 'No players available'}</div>`;
         }
         
         const topPlayers = [...this.players]
@@ -738,26 +721,24 @@ class DemonListApp {
         const totalPlayers = this.players.length;
         const totalPoints = this.players.reduce((sum, player) => sum + (player.points || 0), 0);
         const avgPointsPerPlayer = totalPlayers > 0 ? Math.round(totalPoints / totalPlayers) : 0;
-        const avgLevelsPerPlayer = totalPlayers > 0 ? 
-            Math.round(this.players.reduce((sum, player) => sum + (player.levelsCount || 0), 0) / totalPlayers) : 0;
         
         return `
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-value">${totalLevels}</div>
-                    <div class="stat-label">${this.i18n.t('total_levels') || 'Total Levels'}</div>
+                    <div class="stat-label" data-i18n="total_levels">Total Levels</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${totalPlayers}</div>
-                    <div class="stat-label">${this.i18n.t('total_players') || 'Total Players'}</div>
+                    <div class="stat-label" data-i18n="total_players">Total Players</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${totalPoints.toLocaleString()}</div>
-                    <div class="stat-label">${this.i18n.t('total_points') || 'Total Points'}</div>
+                    <div class="stat-label" data-i18n="total_points">Total Points</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">${avgPointsPerPlayer.toLocaleString()}</div>
-                    <div class="stat-label">${this.i18n.t('avg_points_per_player') || 'Avg Points/Player'}</div>
+                    <div class="stat-label" data-i18n="avg_points_per_player">Avg Points/Player</div>
                 </div>
             </div>
         `;

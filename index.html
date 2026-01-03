@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geometry Dash Demon List</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Шумовой эффект будет через CSS -->
+    
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">DEMON LIST</div>
+            
+            <div class="nav-controls">
+                <select id="language-selector" class="language-selector">
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                </select>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link" data-page="home" data-i18n="home">Home</a></li>
+                <li><a href="#levels" class="nav-link" data-page="levels" data-i18n="levels">Levels</a></li>
+                <li><a href="#players" class="nav-link" data-page="players" data-i18n="players">Players</a></li>
+                <li><a href="#about" class="nav-link" data-page="about" data-i18n="about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main id="app">
+        <!-- SPA контент будет рендериться здесь -->
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p data-i18n="loading">Loading...</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <span class="version">v1.0</span>
+            <span class="copyright">© 2024 Geometry Dash Demon List</span>
+        </div>
+    </footer>
+
+    <!-- JavaScript файлы -->
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/points.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/render.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

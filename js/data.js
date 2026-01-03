@@ -21,27 +21,27 @@ window.initialData = {
     {
       id: 1,
       name: "itzbit",
-      levels: [[2]]
+      levels: [2]
     },
     {
       id: 2,
       name: "afrumka",
-      levels: [[2]]
+      levels: [2]
     },
     {
       id: 3,
       name: "notdogorix",
-      levels: [[1], [2]]
+      levels: [1, 2]
     },
     {
       id: 4,
       name: "Unity",
-      levels: [[1]]
+      levels: [1]
     },
     {
       id: 5,
       name: "treygolnik23",
-      levels: [[1]]
+      levels: [1]
     }
   ]
 };

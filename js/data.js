@@ -3,10 +3,17 @@ window.initialData = {
   levels: [
     {
       id: 1,
-      name: "Tidal Wave",
+      name: "Decade",
+      creator: "Unity",
+      verifier: "Unity",
+      videoURL: false
+    },
+    {
+      id: 2,
+      name: "unnamed 1",
       creator: "afrumka",
       verifier: "afrumka",
-      videoURL: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+      videoURL: false
     },
   ],
 
@@ -14,27 +21,27 @@ window.initialData = {
     {
       id: 1,
       name: "itzbit",
-      levels: [1]
+      levels: [[2]]
     },
     {
       id: 2,
       name: "afrumka",
-      levels: [1]
+      levels: [[2]]
     },
     {
       id: 3,
       name: "notdogorix",
-      levels: [1]
+      levels: [[1], [2]]
     },
     {
       id: 4,
-      name: "Giron",
-      levels: [1]
+      name: "Unity",
+      levels: [[1]]
     },
     {
       id: 5,
-      name: "TestPlayer",
-      levels: [1]
+      name: "treygolnik23",
+      levels: [[1]]
     }
   ]
 };
